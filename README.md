@@ -1,78 +1,76 @@
-# Proyecto – Simulación de Entidad Rotatoria
+# Proyecto de Graficación — Agente Triangular en Movimiento
 
-## Descripción General
+## 📌 Descripción General
 
-Este proyecto implementa una entidad gráfica con forma triangular que puede:
+Este proyecto implementa una figura triangular que actúa como un agente móvil dentro de un entorno gráfico.
+
+El sistema permite simular movimiento vectorial en tiempo real utilizando rotación y desplazamiento relativo a la orientación actual del objeto.
+
+---
+
+## 🎯 Funcionalidades
+
+El agente triangular puede:
 
 - Rotar sobre su propio eje
-- Avanzar y retroceder según su orientación
+- Avanzar en la dirección hacia donde apunta
+- Retroceder en sentido contrario
 - Rebotar automáticamente al colisionar con los bordes de la ventana
-
-El desarrollo fue realizado utilizando la librería `pygame`.
-
----
-
-## Estructura del Proyecto
-
-### 1. agente.py
-
-Contiene la clase `EntidadMovil`, encargada de:
-
-- Administrar posición mediante `pygame.Vector2`
-- Manejar la orientación en grados
-- Calcular la rotación del triángulo usando funciones trigonométricas
-- Dibujar el polígono rotado en pantalla
-
-Se utiliza una transformación manual basada en seno y coseno para aplicar rotación sobre los vértices definidos localmente.
+- Mantener movimiento suave mediante control por delta de tiempo
 
 ---
 
-### 2. main.py
+## 📂 Estructura del Proyecto
 
-Gestiona:
+### 🔹 agente.py
+Define la clase principal del objeto móvil.
 
-- Inicialización del entorno gráfico
-- Control del teclado
-- Movimiento y rotación
-- Detección de colisiones con bordes
-- Refresco de pantalla
+Responsabilidades:
 
-La lógica fue modularizada en funciones independientes:
-
-- `procesar_movimiento()`
-- `procesar_rotacion()`
-- `verificar_limites()`
-
-Esto mejora la legibilidad y organización del código.
+- Gestionar posición y orientación
+- Calcular dirección de movimiento con trigonometría
+- Aplicar desplazamiento vectorial
+- Detectar colisiones con límites de pantalla
+- Renderizar el triángulo con rotación dinámica
 
 ---
 
-## Controles
+### 🔹 main.py
+Archivo principal del programa.
+
+Se encarga de:
+
+- Inicializar Pygame
+- Crear la ventana gráfica
+- Capturar eventos del teclado
+- Ejecutar el bucle principal del juego
+- Actualizar estado del agente
+- Dibujar en pantalla cada fotograma
+
+---
+
+## 🎮 Controles de Movimiento
 
 | Tecla | Acción |
-|-------|--------|
+|------|--------|
 | W / ↑ | Avanzar |
 | S / ↓ | Retroceder |
-| A / ← | Rotar izquierda |
-| D / → | Rotar derecha |
+| A / ← | Rotar a la izquierda |
+| D / → | Rotar a la derecha |
 
 ---
 
-## Comportamiento del Rebote
+## 🧰 Librerías Utilizadas
 
-Cuando la entidad toca un borde:
-
-- Se corrige su posición
-- Se ajusta su ángulo de dirección
-- Se normaliza el ángulo en un rango de 0° a 360°
-
-Esto permite simular un rebote dinámico realista.
+- **pygame** → Renderizado y control de eventos
+- **math** → Cálculos trigonométricos
+- **numpy** → Manejo eficiente de vectores
 
 ---
 
-## Posibles Mejoras Futuras
+## ⚙️ Requisitos
 
-- Implementar aceleración e inercia
-- Agregar múltiples entidades
-- Añadir detección de colisiones entre objetos
-- Incorporar disparos o interacción adicional
+Instalar dependencias:
+
+```bash
+pip install pygame numpy

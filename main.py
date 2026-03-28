@@ -1,100 +1,47 @@
 import pygame
-from math import radians
-from agente import EntidadMovil
-
-# ─────────────────────────────
-# CONFIGURACIÓN GENERAL
-# ─────────────────────────────
-DIMENSIONES = (800, 600)
-FPS = 60
-
-VELOCIDAD_LINEAL = 5
-VELOCIDAD_ANGULAR = 3
+from agente import NaveTriangular
 
 
-def iniciar():
+def iniciar_pygame():
     pygame.init()
-    ventana = pygame.display.set_mode(DIMENSIONES)
-    pygame.display.set_caption("Simulación de Entidad con Colisión")
-    temporizador = pygame.time.Clock()
-    return ventana, temporizador
+    pygame.key.set_repeat(1, 30)
 
 
-def procesar_movimiento(objeto, teclas):
-    vector_mov = pygame.Vector2(0, 0)
-
-    if teclas[pygame.K_w] or teclas[pygame.K_UP]:
-        ang = radians(objeto.direccion)
-        vector_mov.x += VELOCIDAD_LINEAL * pygame.math.Vector2(1, 0).rotate(-objeto.direccion).x
-        vector_mov.y += VELOCIDAD_LINEAL * pygame.math.Vector2(1, 0).rotate(-objeto.direccion).y
-
-    if teclas[pygame.K_s] or teclas[pygame.K_DOWN]:
-        ang = radians(objeto.direccion)
-        vector_mov.x -= VELOCIDAD_LINEAL * pygame.math.Vector2(1, 0).rotate(-objeto.direccion).x
-        vector_mov.y -= VELOCIDAD_LINEAL * pygame.math.Vector2(1, 0).rotate(-objeto.direccion).y
-
-    objeto.posicion += vector_mov
+def crear_ventana(resolucion):
+    return pygame.display.set_mode(resolucion)
 
 
-def procesar_rotacion(objeto, teclas):
-    if teclas[pygame.K_a] or teclas[pygame.K_LEFT]:
-        objeto.direccion += VELOCIDAD_ANGULAR
+def bucle_principal():
+    ANCHO_VENTANA = 800
+    ALTO_VENTANA = 600
 
-    if teclas[pygame.K_d] or teclas[pygame.K_RIGHT]:
-        objeto.direccion -= VELOCIDAD_ANGULAR
+    pantalla = crear_ventana((ANCHO_VENTANA, ALTO_VENTANA))
+    pygame.display.set_caption("Agente Inteligente - Movimiento y Rotación")
 
-    objeto.direccion %= 360
-
-
-def verificar_limites(objeto, ancho, alto):
-    limite = objeto.radio * 1.1
-
-    if objeto.posicion.x < limite:
-        objeto.posicion.x = limite
-        objeto.direccion = 180 - objeto.direccion
-
-    if objeto.posicion.x > ancho - limite:
-        objeto.posicion.x = ancho - limite
-        objeto.direccion = 180 - objeto.direccion
-
-    if objeto.posicion.y < limite:
-        objeto.posicion.y = limite
-        objeto.direccion = -objeto.direccion
-
-    if objeto.posicion.y > alto - limite:
-        objeto.posicion.y = alto - limite
-        objeto.direccion = -objeto.direccion
-
-    objeto.direccion %= 360
-
-
-def main():
-    pantalla, reloj = iniciar()
-    ancho, alto = DIMENSIONES
-
-    jugador = EntidadMovil(ancho // 2, alto // 2, 60)
+    reloj = pygame.time.Clock()
+    jugador = NaveTriangular(ANCHO_VENTANA // 2, ALTO_VENTANA // 2, 60, rotacion_inicial=30)
 
     activo = True
     while activo:
+        tiempo_frame = reloj.tick(60) / 1000.0
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 activo = False
 
-        teclas = pygame.key.get_pressed()
+        teclado = pygame.key.get_pressed()
 
-        procesar_rotacion(jugador, teclas)
-        procesar_movimiento(jugador, teclas)
-        verificar_limites(jugador, ancho, alto)
+        jugador.controlar(tiempo_frame, teclado)
+        jugador.limites_pantalla(ANCHO_VENTANA, ALTO_VENTANA)
 
-        pantalla.fill((0, 0, 0))
+        pantalla.fill((15, 15, 20))
         jugador.renderizar(pantalla)
 
-        pygame.display.flip()
-        reloj.tick(FPS)
+        pygame.display.update()
 
     pygame.quit()
 
 
 if __name__ == "__main__":
-    main()
+    iniciar_pygame()
+    bucle_principal()
